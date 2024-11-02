@@ -28,7 +28,7 @@ from rosidl_runtime_py.import_message import import_message_from_namespaced_type
 
 
 def set_message_fields(
-        msg: Any, values: Dict[str, str], expand_header_auto: bool = False,
+        msg: Any, values: Dict[str, Any], expand_header_auto: bool = False,
         expand_time_now: bool = False) -> List[Any]:
     """
     Set the fields of a ROS message.
@@ -52,7 +52,7 @@ def set_message_fields(
     timestamp_fields = []
 
     def set_message_fields_internal(
-            msg: Any, values: Dict[str, str],
+            msg: Any, values: Dict[str, Any],
             timestamp_fields: List[Any]) -> List[Any]:
         try:
             items = values.items()
@@ -70,6 +70,8 @@ def set_message_fields(
                 value = numpy.array(field_value, dtype=field.dtype)
             elif type(field_value) is field_type:
                 value = field_value
+            elif field_type is bytes and type(field_value) is str:
+                value = field_value.encode()
             # We can't import these types directly, so we use the qualified class name to
             # distinguish them from other fields
             elif qualified_class_name == 'std_msgs.msg._header.Header' and \
