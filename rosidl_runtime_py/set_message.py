@@ -71,7 +71,9 @@ def set_message_fields(
             elif type(field_value) is field_type:
                 value = field_value
             elif field_type is bytes and type(field_value) is str:
-                value = field_value.encode()
+                # value = field_value.encode()
+                value = bytes([ord(c) for c in field_value])
+                # value = bytes(field_value, 'ascii', 'backslashreplace')
             # We can't import these types directly, so we use the qualified class name to
             # distinguish them from other fields
             elif qualified_class_name == 'std_msgs.msg._header.Header' and \
